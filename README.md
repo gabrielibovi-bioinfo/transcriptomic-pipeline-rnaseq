@@ -1,6 +1,6 @@
 # 🧬 transcriptomics-rnaseq-pipeline
 
-> Reproducible RNA-seq pipeline from raw FASTQ to pathway enrichment and network analysis — designed to run on Google Colab.
+> Reproducible RNA-seq pipeline from raw FASTQ to pathway enrichment and network analysis — designed to run on Google Colab and R.
 
 ![Platform](https://img.shields.io/badge/platform-Google%20Colab-F9AB00?logo=googlecolab)
 ![Conda](https://img.shields.io/badge/conda-mamba-green)
@@ -58,9 +58,7 @@ transcriptomics-rnaseq-pipeline/
 | Quantification | **featureCounts** | HTSeq | 10–20× faster, multi-threaded, single command for all samples |
 | Normalisation | **DESeq2 median-of-ratios** | manual RPM/FPKM | Correct for count data; never pre-normalise before DESeq2 |
 | p-value correction | **BH (FDR)** | Bonferroni | Controls false discovery rate; standard for RNA-seq |
-| Enrichment A | **enrichGO** (up/down) | — | ORA with controlled background; reproducible via Bioconductor |
-| Enrichment B | **gost** (up/down) | — | Multi-database in one call; auto-updated via g:Profiler API |
-| Enrichment C | **GSEA** (all genes ranked) | — | No cutoff needed; captures subtle coordinated signals |
+| Enrichment | **GSEA** (all genes ranked) | — | No cutoff needed; captures subtle coordinated signals |
 | Network | **STRINGdb + igraph** | — | Identifies hub genes for experimental validation |
 
 ---
@@ -121,32 +119,18 @@ figures/
 ├── qc/           # FastQC, MultiQC (pre/post-trim), fastp HTML, HISAT2 summaries
 ├── deseq2/       # 01_pca_all · 02_heatmap_all · 03_pca_filt · 04_heatmap_filt
 │                 # 05_plotMA · 06_EnhancedVolcano · 07_heatmap_DEGs
-├── enrichment/   # 11A_enrichGO · 11B_gost · 11C_GSEA (dotplots)
+├── enrichment/   # 11_GSEA (dotplots)
 └── network/      # 12_PPI_network
 
 tables/
 ├── DESeq2_all_results_rd1.csv        # All tested genes (Mutation = RD1)
-├── 11A_enrichGO_results.xlsx         # enrichGO up + down (Mutation = RD1)
-├── 11B_gost_results.xlsx             # gost up + down (Mutation = RD1)
-├── 11C_GSEA_GO_results.xlsx          # GSEA GO results (Mutation = RD1)
+├── 11_GSEA_GO_results.xlsx          # GSEA GO results (Mutation = RD1)
 └── 12_hub_genes.xlsx                 # Top 15 hub genes (Mutation = RD1)
 ```
 
 ---
 
 ## Key analysis decisions
-
-### Why raw counts in DESeq2?
-DESeq2 requires **raw integer counts** as input and performs normalisation internally via the median-of-ratios method. Pre-normalised values (RPKM, FPKM, TPM) or rounded decimals produce incorrect p-values and fold changes.
-
-### Why re-run DESeq2 after outlier removal?
-Size factors and dispersion estimates depend on all samples. Removing an outlier changes both — the model must be re-fitted on the clean dataset.
-
-### Why use `padj` (not `pvalue`) in the volcano plot?
-The raw `pvalue` is not corrected for multiple testing. With ~20,000 genes tested, hundreds will appear significant by chance. `padj` (BH/FDR) is the correct metric for significance calls and all downstream analyses.
-
-### Why separate up/down in ORA (enrichGO, gost)?
-ORA tests whether a gene set is over-represented in a list. Mixing up- and down-regulated genes in the same list can cancel out real signals and produces biologically ambiguous results. Separating them allows identifying which pathways are **activated** vs **repressed**.
 
 ### GSEA ranking metric
 `sign(log2FC) × −log10(padj + ε)` captures both the direction of regulation and statistical confidence. This is preferred over log2FC alone for GSEA.
@@ -181,7 +165,7 @@ ORA tests whether a gene set is over-represented in a list. Mixing up- and down-
 
 ## Author
 
-**Gabriel Ibovi**  
+**Gabrieli Bovi**  
 Bioinformatics | Transcriptomics | Multi-omics Data Analysis  
 🔗 [github.com/gabrielibovi-bioinfo](https://github.com/gabrielibovi-bioinfo)
 
