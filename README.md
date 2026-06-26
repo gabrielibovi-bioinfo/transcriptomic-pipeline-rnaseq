@@ -5,7 +5,6 @@
 ![Platform](https://img.shields.io/badge/platform-Google%20Colab-F9AB00?logo=googlecolab)
 ![Conda](https://img.shields.io/badge/conda-mamba-green)
 ![R](https://img.shields.io/badge/R-%3E%3D4.1-276DC3?logo=r)
-![Status](https://img.shields.io/badge/status-in%20development-yellow)
 
 ---
 
@@ -31,7 +30,7 @@ SRA FASTQ
     ├── [Step 8]  Differential expression — DESeq2 (BH/FDR correction)
     ├── [Step 9]  ID conversion — ENSEMBL → symbol + Entrez (org.Mm.eg.db)
     ├── [Step 10] Visualization — plotMA, EnhancedVolcano, DEG heatmap
-    ├── [Step 11] Enrichment — enrichGO + gost + GSEA (dotplot + table each)
+    ├── [Step 11] Enrichment — GSEA (dotplot + table each)
     └── [Step 12] Network — STRINGdb + igraph (hub genes + PPI network)
 ```
 
@@ -59,7 +58,7 @@ transcriptomics-rnaseq-pipeline/
 | Normalisation | **DESeq2 median-of-ratios** | manual RPM/FPKM | Correct for count data; never pre-normalise before DESeq2 |
 | p-value correction | **BH (FDR)** | Bonferroni | Controls false discovery rate; standard for RNA-seq |
 | Enrichment | **GSEA** (all genes ranked) | — | No cutoff needed; captures subtle coordinated signals |
-| Network | **STRINGdb + igraph** | — | Identifies hub genes for experimental validation |
+| Network | **STRINGdb + igraph + cnetplot** | — | Identifies hub genes for experimental validation |
 
 ---
 
@@ -123,9 +122,9 @@ figures/
 └── network/      # 12_PPI_network
 
 tables/
-├── DESeq2_all_results_rd1.csv        # All tested genes (Mutation = RD1)
-├── 11_GSEA_GO_results.xlsx          # GSEA GO results (Mutation = RD1)
-└── 12_hub_genes.xlsx                 # Top 15 hub genes (Mutation = RD1)
+├── DESeq2_all_results_rd1.csv        # All tested genes
+├── 11_GSEA_GO_results.xlsx          # GSEA GO results
+└── 12_hub_genes.xlsx                 # Top 15 hub genes
 ```
 
 ---
@@ -147,7 +146,6 @@ tables/
 | DESeq2 | [Love et al., 2014](https://doi.org/10.1186/s13059-014-0550-8) |
 | EnhancedVolcano | [Blighe et al.](https://github.com/kevinblighe/EnhancedVolcano) |
 | clusterProfiler | [Wu et al., 2021](https://doi.org/10.1016/j.xinn.2021.100141) |
-| gprofiler2 | [Kolberg et al., 2021](https://doi.org/10.1093/nar/gkab301) |
 | STRINGdb | [Szklarczyk et al., 2021](https://doi.org/10.1093/nar/gkaa1074) |
 | org.Mm.eg.db | [Bioconductor](https://bioconductor.org/packages/org.Mm.eg.db) |
 
